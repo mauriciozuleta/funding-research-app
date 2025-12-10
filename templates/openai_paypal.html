@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+  <div class="d-flex justify-content-between mb-4">
+    <button class="btn btn-primary btn-lg" id="registerApiBtn">Register your Open AI API key</button>
+    <button class="btn btn-success btn-lg" id="getCreditBtn">Get Credit via PayPal</button>
+  </div>
+  <div id="apiKeySection" style="display:none;">
+    <h4 class="mb-3">Register your Open AI API key</h4>
+    <input type="text" class="form-control mb-3" placeholder="Enter your OpenAI API key">
+    <button class="btn btn-primary">Submit API Key</button>
+  </div>
+  <div id="paypalSection" style="display:none;">
+    <h4 class="mb-3">Get Credit via PayPal</h4>
+    <p>To purchase credits, click below to proceed to PayPal.</p>
+    <button class="btn btn-success">Proceed to PayPal</button>
+  </div>
+</div>
+<script>
+  document.getElementById('registerApiBtn').onclick = function() {
+    document.getElementById('apiKeySection').style.display = 'block';
+    document.getElementById('paypalSection').style.display = 'none';
+  };
+  document.getElementById('getCreditBtn').onclick = function() {
+    document.getElementById('paypalSection').style.display = 'block';
+    document.getElementById('apiKeySection').style.display = 'none';
+  };
+</script>
+{% endblock %}
