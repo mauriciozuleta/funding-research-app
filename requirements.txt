@@ -1,0 +1,25 @@
+# --- Framework & Core ---
+Django>=5.0,<6.0
+djangorestframework>=3.15.0
+django-cors-headers>=4.3.1
+
+# --- Environment variables ---
+python-dotenv>=1.0.1
+
+# --- Database drivers (choose one in production) ---
+psycopg2-binary>=2.9.9      # PostgreSQL
+mysqlclient>=2.2.4          # MySQL/MariaDB
+
+# --- Security & encryption ---
+cryptography>=42.0.0        # For encrypting API keys
+pyjwt>=2.8.0                # If you later use JWT for auth tokens
+
+# --- Payment integration ---
+stripe>=8.0.0               # For prepaid credits workflow
+
+# --- AI / LLM support ---
+openai>=1.38.0              # Official OpenAI Python client
+
+# --- Utilities ---
+requests>=2.32.0
+pytz>=2024.1

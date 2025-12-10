@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex flex-column justify-content-center align-items-center vh-100 bg-dark text-light">
+  <div class="text-center" style="max-width:700px;">
+    <h1 class="display-5 fw-bold mb-4">Welcome to Funding Intelligence Agent</h1>
+    <div class="mb-4 text-start" style="margin:auto;max-width:700px;">
+      <h2 class="fw-bold mb-3">Before You Sign Up — Here’s What I Can Help You With</h2>
+      <h4 class="mt-4">What I can do for you</h4>
+      <p>Hi! I’m your Funding Intelligence Agent, and here’s how I can support your research journey:</p>
+      <ul>
+        <li>I search through public funding APIs, open datasets, and ethically allowed web sources to find opportunities that might fit your work.</li>
+        <li>I read and break down funding calls you paste into the app — highlighting priorities, eligibility clues, constraints, and potential risks.</li>
+        <li>I estimate how well a call aligns with your research profile and explain why.</li>
+        <li>I help you get started with your proposal by drafting sections like the abstract, significance, innovation, or training plan.</li>
+        <li>I can also turn your research profile into a clean, funder-facing banner to share with mentors, collaborators, or potential supporters.</li>
+        <li>And if you want, I’ll send alerts or weekly digests whenever something new appears that might be relevant to you.</li>
+      </ul>
+      <h4 class="mt-4">How I work (quick and simple)</h4>
+      <p>I combine:</p>
+      <ul>
+        <li>Public funding APIs</li>
+        <li>Allowed web scraping</li>
+        <li>Your research profile</li>
+        <li>AI-powered reasoning</li>
+      </ul>
+      <p>to speed up your search and help you prepare early-stage materials.<br>Think of me as your research grant co-pilot, not a magic grant machine.</p>
+      <h4 class="mt-4">What I cannot do</h4>
+      <ul>
+        <li>I can’t promise that every opportunity I find is complete, up-to-date, or perfect for your situation.</li>
+        <li>I can’t confirm your eligibility — only the official agency can do that.</li>
+        <li>I can’t submit applications, fill out forms, or interact with external portals.</li>
+        <li>I can’t replace your mentors, grant office, or the official guidelines.</li>
+        <li>And because I’m AI, I may occasionally misunderstand something — so anything I generate should always be double-checked by you.</li>
+      </ul>
+      <h4 class="mt-4">What you’ll still need to do</h4>
+      <ul>
+        <li>Read each funding call carefully</li>
+        <li>Verify your eligibility</li>
+        <li>Edit and refine all draft text</li>
+        <li>Prepare budgets, letters, and compliance materials</li>
+        <li>Coordinate with your grant office or mentors</li>
+      </ul>
+      <p>I’ll guide you — but you drive the process.</p>
+      <div class="alert alert-warning mt-4" role="alert">
+        <strong>Disclaimer</strong><br>
+        I provide informational support and AI-generated drafts to help you work more efficiently.<br>
+        I do not guarantee accuracy, completeness, or success in any funding process.<br>
+        All final decisions, eligibility checks, application materials, and reliance on information are your responsibility.<br>
+        Always refer to the official funding announcement and agency guidelines.
+      </div>
+    </div>
+    <form class="mt-4" method="get" action="/signup/register/" style="max-width:700px;margin:auto;">
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="agree" name="agree" required>
+        <label class="form-check-label" for="agree">I have read and understood the capabilities and limitations above.</label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg" id="continueBtn">Continue to Sign Up</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
