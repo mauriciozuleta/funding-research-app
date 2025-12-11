@@ -1,5 +1,6 @@
 
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
@@ -9,4 +10,5 @@ urlpatterns = [
     path('openai-paypal/', views.openai_paypal, name='openai_paypal'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 ]

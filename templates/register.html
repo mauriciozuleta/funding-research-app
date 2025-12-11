@@ -9,98 +9,148 @@
   {% endif %}
   <form method="post" id="registerForm">
     {% csrf_token %}
-    <div class="mb-3">
-      <label for="first_name" class="form-label">First Name</label>
-      <input type="text" class="form-control" id="first_name" name="first_name" required value="{{ first_name }}" title="Please enter your first name.">
-    </div>
-    <div class="mb-3">
-      <label for="last_name" class="form-label">Last Name</label>
-      <input type="text" class="form-control" id="last_name" name="last_name" required value="{{ last_name }}" title="Please enter your last name.">
-    </div>
-    <div class="mb-3">
-      <label for="email" class="form-label">Email Address</label>
-      <input type="email" class="form-control" id="email" name="email" required value="{{ email }}" title="Please enter a valid email address.">
-      <div class="form-text">Used for login + notifications</div>
-    </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <input type="password" class="form-control" id="password" name="password" required oninput="checkStrength()" title="Please enter a password.">
-      <div id="strengthMessage" class="form-text"></div>
-    </div>
-    <div class="mb-3">
-      <label for="confirm_password" class="form-label">Confirm Password</label>
-      <input type="password" class="form-control" id="confirm_password" name="confirm_password" required title="Please confirm your password.">
-    </div>
-    <button type="button" class="btn btn-primary w-100" id="createUserBtn">Create User</button>
-    <div id="userProfileSection" style="display:none;">
+      <div class="mb-3">
+        <label for="first_name" class="form-label">First Name</label>
+        <input type="text" class="form-control" id="first_name" name="first_name" required value="{{ form.first_name.value|default_if_none:'' }}" title="Please enter your first name.">
+      </div>
+      <div class="mb-3">
+        <label for="last_name" class="form-label">Last Name</label>
+        <input type="text" class="form-control" id="last_name" name="last_name" required value="{{ form.last_name.value|default_if_none:'' }}" title="Please enter your last name.">
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email Address</label>
+        <input type="email" class="form-control" id="email" name="email" required value="{{ form.email.value|default_if_none:'' }}" title="Please enter a valid email address.">
+        <div class="form-text">Used for login + notifications</div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required oninput="checkStrength()" title="Please enter a password.">
+        <ul id="passwordRequirements" class="list-unstyled mb-0">
+          <li id="req-length" class="text-danger"><span class="me-1">&#10060;</span> At least 8 characters</li>
+          <li id="req-number" class="text-danger"><span class="me-1">&#10060;</span> At least 1 number</li>
+          <li id="req-special" class="text-danger"><span class="me-1">&#10060;</span> At least 1 special character</li>
+        </ul>
+        <div id="strengthMessage" class="form-text"></div>
+      </div>
+      <div class="mb-3">
+        <label for="confirm_password" class="form-label">Confirm Password</label>
+        <input type="password" class="form-control" id="confirm_password" name="confirm_password" required title="Please confirm your password.">
+      </div>
       <hr class="my-4">
       <h4 class="mb-3">User Profile</h4>
       <div class="mb-3">
         <label for="country" class="form-label">Country <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" id="country" name="country" required title="Please enter your country." oninvalid="this.setCustomValidity('Please enter your country.')" oninput="this.setCustomValidity('')">
-      </div>
-      <div class="mb-3">
-        <label for="state" class="form-label">State (optional)</label>
-        <input type="text" class="form-control" id="state" name="state">
-      </div>
-      <div class="mb-3">
-        <label for="career_stage" class="form-label">Career Stage <span class="text-danger">*</span></label>
-        <select class="form-select" id="career_stage" name="career_stage" required title="Please select your career stage." oninvalid="this.setCustomValidity('Please select your career stage.')" oninput="this.setCustomValidity('')">
-          <option value="" disabled selected>Select your career stage</option>
-          <option>Undergraduate student</option>
-          <option>Master’s student</option>
-          <option>PhD student</option>
-          <option>Postdoctoral researcher</option>
-          <option>Faculty / PI</option>
-          <option>Research staff</option>
-          <option>Independent researcher</option>
+        <select class="form-select" id="country" name="country" required>
+          <option value="" disabled selected>Select your country</option>
+          {% for c in profile_form.fields.country.choices %}
+            <option value="{{ c.0 }}" {% if profile_form.country.value == c.0 %}selected{% endif %}>{{ c.1 }}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="mb-3">
+        <label for="state" class="form-label">State (optional)</label>
+        <input type="text" class="form-control" id="state" name="state" value="{{ profile_form.state.value|default_if_none:'' }}">
+      </div>
+      <div class="mb-3">
+        <label for="career_stage" class="form-label">Career Stage <span class="text-danger">*</span></label>
+        <select class="form-select" id="career_stage" name="career_stage" required onchange="toggleInstitutionField()">
+          <option value="" disabled selected>Select your career stage</option>
+          <option {% if profile_form.career_stage.value == 'Undergraduate student' %}selected{% endif %}>Undergraduate student</option>
+          <option {% if profile_form.career_stage.value == 'Master’s student' %}selected{% endif %}>Master’s student</option>
+          <option {% if profile_form.career_stage.value == 'PhD student' %}selected{% endif %}>PhD student</option>
+          <option {% if profile_form.career_stage.value == 'Postdoctoral researcher' %}selected{% endif %}>Postdoctoral researcher</option>
+          <option {% if profile_form.career_stage.value == 'Faculty / PI' %}selected{% endif %}>Faculty / PI</option>
+          <option {% if profile_form.career_stage.value == 'Research staff' %}selected{% endif %}>Research staff</option>
+          <option {% if profile_form.career_stage.value == 'Independent researcher' %}selected{% endif %}>Independent researcher</option>
+        </select>
+      </div>
+      <div class="mb-3" id="institutionField" style="display:none;">
+        <label for="institution_name" class="form-label" id="institutionLabel">Institution Name</label>
+        <input type="text" class="form-control" id="institution_name" name="institution_name" required value="{{ profile_form.institution_name.value|default_if_none:'' }}">
+      </div>
+      <div class="mb-3">
         <label for="discipline" class="form-label">Field / Discipline</label>
-        <input type="text" class="form-control" id="discipline" name="discipline" title="Please enter your field or discipline.">
+        <input type="text" class="form-control" id="discipline" name="discipline" value="{{ profile_form.discipline.value|default_if_none:'' }}">
       </div>
       <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" id="ai_consent" name="ai_consent" required oninvalid="this.setCustomValidity('You must consent to the AI disclaimer to continue.')" oninput="this.setCustomValidity('')">
+        <input class="form-check-input" type="checkbox" id="ai_consent" name="ai_consent" required {% if profile_form.ai_consent.value %}checked{% endif %}>
         <label class="form-check-label" for="ai_consent">
           I understand this tool provides AI-generated recommendations and drafts that must be independently reviewed.
         </label>
         <div class="invalid-feedback" id="aiConsentWarning" style="display:none;">You must consent to the AI disclaimer to continue.</div>
       </div>
-      <a href="/openai-paypal/" class="btn btn-success w-100" id="continueOpenAI">Continue to open AI registration</a>
-    </div>
+    <button type="submit" class="btn btn-primary w-100" id="createUserBtn">Create Account</button>
   </form>
+  <!-- Success Modal -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content bg-dark text-light">
+        <div class="modal-header border-0">
+          <h5 class="modal-title" id="successModalLabel">Registration Complete</h5>
+        </div>
+        <div class="modal-body">
+          Your account and profile have been created successfully.<br>
+          <button class="btn btn-primary mt-3 w-100" id="goToOpenAI">Continue to OpenAI Registration</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 <script>
 function checkStrength() {
-  const pwd = document.getElementById('password').value;
+  const pwd = document.getElementById('password') ? document.getElementById('password').value : '';
   const msg = document.getElementById('strengthMessage');
   let strength = 0;
-  if (pwd.length >= 8) strength++;
-  if (/[A-Z]/.test(pwd)) strength++;
-  if (/[0-9]/.test(pwd)) strength++;
-  if (/[^A-Za-z0-9]/.test(pwd)) strength++;
-  if (strength === 0) msg.textContent = '';
-  else if (strength <= 2) msg.textContent = 'Weak password';
-  else if (strength === 3) msg.textContent = 'Medium strength';
-  else msg.textContent = 'Strong password';
+  // Requirements
+  const lengthOK = pwd.length >= 8;
+  const numberOK = /[0-9]/.test(pwd);
+  const specialOK = /[^A-Za-z0-9]/.test(pwd);
+
+  // Update UI for each requirement
+  document.getElementById('req-length').className = lengthOK ? 'text-success' : 'text-danger';
+  document.getElementById('req-length').innerHTML = (lengthOK ? '<span class="me-1">&#10004;</span>' : '<span class="me-1">&#10060;</span>') + ' At least 8 characters';
+  document.getElementById('req-number').className = numberOK ? 'text-success' : 'text-danger';
+  document.getElementById('req-number').innerHTML = (numberOK ? '<span class="me-1">&#10004;</span>' : '<span class="me-1">&#10060;</span>') + ' At least 1 number';
+  document.getElementById('req-special').className = specialOK ? 'text-success' : 'text-danger';
+  document.getElementById('req-special').innerHTML = (specialOK ? '<span class="me-1">&#10004;</span>' : '<span class="me-1">&#10060;</span>') + ' At least 1 special character';
+
+  // Strength message
+  strength = [lengthOK, numberOK, specialOK].filter(Boolean).length;
+  if (msg) {
+    if (!pwd) msg.textContent = '';
+    else if (strength <= 1) msg.textContent = 'Weak password';
+    else if (strength === 2) msg.textContent = 'Medium strength';
+    else msg.textContent = 'Strong password';
+  }
 }
 
-document.getElementById('createUserBtn').addEventListener('click', function() {
-  document.getElementById('userProfileSection').style.display = 'block';
-  this.style.display = 'none';
+// Show modal if profile was saved
+{% if profile_saved %}
+document.addEventListener('DOMContentLoaded', function() {
+  var modal = new bootstrap.Modal(document.getElementById('successModal'));
+  modal.show();
+  document.getElementById('goToOpenAI').onclick = function() {
+    window.location.href = '/openai-paypal/';
+  };
 });
-
-document.getElementById('registerForm').addEventListener('submit', function(e) {
-  var aiConsent = document.getElementById('ai_consent');
-  var aiWarning = document.getElementById('aiConsentWarning');
-  if (document.getElementById('userProfileSection').style.display === 'block' && !aiConsent.checked) {
-    aiWarning.style.display = 'block';
-    e.preventDefault();
+{% endif %}
+function toggleInstitutionField() {
+  var careerStage = document.getElementById('career_stage').value;
+  var field = document.getElementById('institutionField');
+  var label = document.getElementById('institutionLabel');
+  if (careerStage === 'Independent researcher') {
+    field.style.display = 'block';
+    label.textContent = 'Company Name';
+  } else if (careerStage) {
+    field.style.display = 'block';
+    label.textContent = 'Institution Name';
   } else {
-    aiWarning.style.display = 'none';
+    field.style.display = 'none';
   }
+}
+document.addEventListener('DOMContentLoaded', function() {
+  toggleInstitutionField();
 });
 </script>
 {% endblock %}

@@ -1,23 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="height: 100vh; background: #181a20;">
-  <form id="loginForm" class="p-5 rounded shadow" style="background: #23272f; min-width: 340px; max-width: 400px;">
+  <form id="loginForm" method="post" action="/login/" class="p-5 rounded shadow" style="background: #23272f; min-width: 340px; max-width: 400px;">
+    {% csrf_token %}
     <h2 class="text-center text-light mb-4">Sign In</h2>
+    {% if error %}
+      <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% endif %}
     <div class="mb-3">
       <label for="loginEmail" class="form-label text-light">Email</label>
-      <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required style="background:#181a20; color:#f1f1f1; border:none;">
+      <input type="email" class="form-control" id="loginEmail" name="email" placeholder="Enter your email" required style="background:#181a20; color:#f1f1f1; border:none;">
     </div>
     <div class="mb-4">
       <label for="loginPassword" class="form-label text-light">Password</label>
-      <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required style="background:#181a20; color:#f1f1f1; border:none;">
+      <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Enter your password" required style="background:#181a20; color:#f1f1f1; border:none;">
     </div>
     <button type="submit" class="btn btn-primary w-100">Sign In</button>
   </form>
 </div>
-<script>
-  document.getElementById('loginForm').onsubmit = function(e) {
-    e.preventDefault();
-    window.location.href = '/dashboard';
-  };
-</script>
 {% endblock %}
