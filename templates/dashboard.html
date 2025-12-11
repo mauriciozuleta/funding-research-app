@@ -48,6 +48,12 @@
           <div class="mb-2" style="font-weight: bold;">OpenAI Chat</div>
           <div class="mt-2" style="cursor:pointer; font-weight: normal;">Ask Anything</div>
         </div>
+        <!-- OpenAI Subscription options -->
+        <div id="openAISubscriptionOptions" style="color: #00a67e; display:none;">
+          <div class="mb-2" style="font-weight: bold;">OpenAI Subscription</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Manage Subscription</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Credit Status</div>
+        </div>
         <!-- Add more options sections here for other icons -->
       </div>
     </nav>
@@ -121,17 +127,12 @@
       showSidebar('userBannerOptions');
     }
   };
-  // Fix: Single handler for OpenAI icon to toggle both chat and sidebar
-  var openAIIcon = document.getElementById('openAISidebarIcon');
-  var chatBox = document.getElementById('chatBox');
-  var chatVisible = false;
-  openAIIcon.onclick = function() {
-    chatVisible = !chatVisible;
-    chatBox.style.display = chatVisible ? 'block' : 'none';
-    if (activeSection === 'openAIOptions') {
+  var openAISubscriptionIcon = document.getElementById('openAISubscriptionSidebarIcon');
+  openAISubscriptionIcon.onclick = function() {
+    if (activeSection === 'openAISubscriptionOptions') {
       hideSidebar();
     } else {
-      showSidebar('openAIOptions');
+      showSidebar('openAISubscriptionOptions');
     }
   };
 
