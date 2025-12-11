@@ -5,9 +5,35 @@
     <p>To personalize recommendations, analyze funding calls, and generate draft text, this app uses the OpenAI API.<br>
     You can choose one of two ways to access the API, depending on what works best for you.</p>
   </div>
-  <div class="d-flex justify-content-between mb-4">
-    <button class="btn btn-primary btn-lg" id="registerApiBtn">Register your Open AI API key</button>
-    <button class="btn btn-success btn-lg" id="getCreditBtn">Get Credit via PayPal</button>
+  <ul class="mb-4 text-start" style="max-width: 600px; margin: 0 auto;">
+    <li class="mb-3">
+      <span class="fw-bold text-primary" id="whyChooseLabel" style="cursor:pointer;">Why use your own Open AI API Key</span>
+      <span id="checkChooseLabel" style="display:none; color:green; font-size:1.2em;">&#10003;</span>
+    </li>
+    <li class="mb-3">
+      <span class="fw-bold" id="whyChoosePaypalLabel" style="cursor:pointer; color:#198754;">Why get developer Credit</span>
+      <span id="checkPaypalLabel" style="display:none; color:green; font-size:1.2em;">&#10003;</span>
+    </li>
+    <li class="mb-3">
+      <span class="fw-bold" id="whichOptionLabel" style="cursor:pointer; color:#4f8cff;">Which option is better for me?</span>
+      <span id="checkWhichLabel" style="display:none; color:green; font-size:1.2em;">&#10003;</span>
+    </li>
+  </ul>
+  <div class="mb-4 text-start" style="max-width: 600px; margin: 0 auto;">
+    <h5 class="fw-bold" style="color: #FFD600;">Your privacy &amp; security</h5>
+    <ul style="color: #FFD600;">
+      <li>Your API keys and usage data are never shared or used outside this app.</li>
+      <li>If you use developer credits, all payments are handled by trusted providers like PayPal or Stripe.</li>
+      <li>We never store your credit card details.</li>
+    </ul>
+  </div>
+  <div class="row mb-4 justify-content-center" style="max-width: 600px; margin: 0 auto;">
+    <div class="col-md-6 d-flex flex-column align-items-center mb-3 mb-md-0">
+      <button class="btn btn-primary btn-lg w-100 py-3" style="min-width:270px; max-width:100%; font-size:1.1rem; height:60px;" id="registerApiBtn" disabled>Register your Open AI API key</button>
+    </div>
+    <div class="col-md-6 d-flex flex-column align-items-center">
+      <button class="btn btn-success btn-lg w-100 py-3" style="min-width:270px; max-width:100%; font-size:1.1rem; height:60px;" id="getCreditBtn" disabled>Get Credit via PayPal</button>
+    </div>
   </div>
   <div id="apiKeySection" style="display:none;">
     <h4 class="mb-3">Register your Open AI API key</h4>
@@ -20,7 +46,89 @@
     <button class="btn btn-success">Proceed to PayPal</button>
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="whyChooseModal" tabindex="-1" aria-labelledby="whyChooseModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="whyChooseModalLabel">Use Your Own OpenAI API Key</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>If you already have an OpenAI account—or want full control over your usage—this is the easiest and most transparent option.</p>
+        <h6>How it works</h6>
+        <ul>
+          <li>You create or log into your own OpenAI account.</li>
+          <li>You generate an API key there.</li>
+          <li>You paste your key into the app once during onboarding.</li>
+          <li>All AI processing is billed directly to you by OpenAI, not by us.</li>
+        </ul>
+        <h6>Why choose this option</h6>
+        <ul>
+          <li>🔒 You keep full ownership and control of your usage.</li>
+          <li>💳 You’re billed directly by OpenAI at their normal rates.</li>
+          <li>📊 You can see your usage in your OpenAI dashboard at any time.</li>
+          <li>🧠 Best for heavy users or researchers who want predictable cost tracking.</li>
+        </ul>
+        <p>Your key is encrypted and stored securely. You can replace or delete it at any time.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PayPal Why Choose Modal -->
+<div class="modal fade" id="whyChoosePaypalModal" tabindex="-1" aria-labelledby="whyChoosePaypalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="whyChoosePaypalModalLabel">Use the App’s Developer Credits (Prepaid)</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>If you prefer not to create an OpenAI account, you can use the app’s shared developer access instead.</p>
+        <h6>How it works</h6>
+        <ul>
+          <li>You add a small amount of credit (e.g., $3–$10) through PayPal, Stripe, or another payment method.</li>
+          <li>Your credit is converted into an internal usage balance.</li>
+          <li>Each AI request deducts from your prepaid balance.</li>
+          <li>When you run out, the app will pause AI features and prompt you to refill.</li>
+        </ul>
+        <h6>Why choose this option</h6>
+        <ul>
+          <li>🧾 No need to create an OpenAI account.</li>
+          <li>👍 Simple pay-as-you-go model.</li>
+          <li>💼 Ideal for new users or occasional usage.</li>
+          <li>🔐 Your payment info is handled securely by the payment provider—not stored by the app.</li>
+        </ul>
+        <p>We never charge more than the prepaid amount, and you stay in control of your balance.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Which Option Modal -->
+<div class="modal fade" id="whichOptionModal" tabindex="-1" aria-labelledby="whichOptionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content bg-dark text-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="whichOptionModalLabel">Which option is better for me?</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>If you plan to use the assistant frequently, Option 1 (your own API key) is usually cheaper and more predictable.</p>
+        <p>If you just want to try the app without creating extra accounts, Option 2 (prepaid credits) is simpler.</p>
+        <p>You can switch options at any time in your account settings.</p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  let readChoose = false, readPaypal = false, readWhich = false;
+  function enableButtonsIfRead() {
+    if (readChoose && readPaypal && readWhich) {
+      document.getElementById('registerApiBtn').disabled = false;
+      document.getElementById('getCreditBtn').disabled = false;
+    }
+  }
   document.getElementById('registerApiBtn').onclick = function() {
     document.getElementById('apiKeySection').style.display = 'block';
     document.getElementById('paypalSection').style.display = 'none';
@@ -28,6 +136,27 @@
   document.getElementById('getCreditBtn').onclick = function() {
     document.getElementById('paypalSection').style.display = 'block';
     document.getElementById('apiKeySection').style.display = 'none';
+  };
+  document.getElementById('whyChooseLabel').onclick = function() {
+    var modal = new bootstrap.Modal(document.getElementById('whyChooseModal'));
+    modal.show();
+    readChoose = true;
+    document.getElementById('checkChooseLabel').style.display = 'inline';
+    enableButtonsIfRead();
+  };
+  document.getElementById('whyChoosePaypalLabel').onclick = function() {
+    var modal = new bootstrap.Modal(document.getElementById('whyChoosePaypalModal'));
+    modal.show();
+    readPaypal = true;
+    document.getElementById('checkPaypalLabel').style.display = 'inline';
+    enableButtonsIfRead();
+  };
+  document.getElementById('whichOptionLabel').onclick = function() {
+    var modal = new bootstrap.Modal(document.getElementById('whichOptionModal'));
+    modal.show();
+    readWhich = true;
+    document.getElementById('checkWhichLabel').style.display = 'inline';
+    enableButtonsIfRead();
   };
 </script>
 {% endblock %}
