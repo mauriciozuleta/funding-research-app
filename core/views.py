@@ -1,3 +1,5 @@
+def dashboard(request):
+    return render(request, 'dashboard.html')
 def signup_intro(request):
     return render(request, 'signup_intro.html')
 

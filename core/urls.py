@@ -7,4 +7,5 @@ urlpatterns = [
     path('signup/', views.signup_intro, name='signup_intro'),
     path('signup/register/', views.register, name='register'),
     path('openai-paypal/', views.openai_paypal, name='openai_paypal'),
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- Top bar with logo and label -->
+<div class="d-flex align-items-center justify-content-between px-4 py-2" style="background: #181a20; border-bottom: 1px solid #23272f;">
+  <div class="d-flex align-items-center gap-3">
+    <img src="{% static 'img/new logo.png' %}" alt="Funding Agent Logo" style="height: 32px; width: auto; object-fit: contain; filter: brightness(0.95) drop-shadow(0 0 4px #23272f);">
+    <span class="fs-4 fw-bold text-light">Funding Intelligence Agent</span>
+  </div>
+  <!-- Top bar right section left empty as requested -->
+</div>
+<div class="d-flex" style="height: calc(90vh - 56px);">
+  <!-- VSCode-style Sidebar -->
+  <div id="sidebarContainer" class="d-flex" style="height: 100%;">
+    <!-- Vertical icon-only bar -->
+    <div id="sidebarIcons" class="d-flex flex-column align-items-center py-3" style="width: 56px; min-width: 56px; border-right: 1px solid #23272f; height: 100%; background: #181a20;">
+      <img src="https://img.icons8.com/ios/50/ff6f61/microscope--v1.png" alt="Research" id="fundingSidebarIcon" class="sidebar-icon active" style="width:32px; height:32px; margin-bottom: 16px; cursor:pointer;" title="Research">
+      <img src="https://img.icons8.com/ios/50/43d675/folder-invoices--v1.png" alt="Folder" id="folderSidebarIcon" class="sidebar-icon" style="width:32px; height:32px; margin-bottom: 16px; cursor:pointer;" title="Folder">
+      <img src="https://img.icons8.com/ios/50/f9a825/name--v1.png" alt="User Banner" id="userBannerSidebarIcon" class="sidebar-icon" style="width:32px; height:32px; margin-bottom: 16px; cursor:pointer;" title="Personal Banner">
+      <img src="https://img.icons8.com/ios-filled/50/8e44ad/chatgpt.png" alt="OpenAI" id="openAISidebarIcon" class="sidebar-icon" style="width:32px; height:32px; margin-bottom: 16px; cursor:pointer; background:#fff; border-radius:6px; padding:2px;" title="OpenAI Chat">
+      <div style="flex-grow:1;"></div>
+      <img src="https://img.icons8.com/ios/50/4f8cff/settings.png" alt="Settings" id="settingsSidebarIcon" class="sidebar-icon" style="width:32px; height:32px; margin-bottom: 0; cursor:pointer;" title="Settings">
+    </div>
+    <!-- Sidebar options, toggled by icon click -->
+    <nav id="sidebar" class="bg-dark text-light p-3" style="width: 0; min-width: 0; max-width: 220px; overflow: hidden; display: flex; flex-direction: column; align-items: stretch; border-right: 1px solid #23272f; transition: width 0.2s, min-width 0.2s, padding 0.2s; padding: 0;">
+      <div id="sidebarOptions" style="display: none;">
+        <!-- Funding Research options -->
+        <div id="fundingOptions" style="color: #ff6f61;">
+          <div class="mb-2" style="font-weight: bold;">Funding Research</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Fund new research</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">My applications</div>
+        </div>
+        <!-- Folder options -->
+        <div id="folderOptions" style="color: #43d675; display:none;">
+          <div class="mb-2" style="font-weight: bold;">Folders</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">My Documents</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Shared Folders</div>
+        </div>
+        <!-- User Banner options -->
+        <div id="userBannerOptions" style="color: #f9a825; display:none;">
+          <div class="mb-2" style="font-weight: bold;">Personal Banner</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Profile</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Settings</div>
+        </div>
+        <!-- OpenAI options (chat) -->
+        <div id="openAIOptions" style="color: #8e44ad; display:none;">
+          <div class="mb-2" style="font-weight: bold;">OpenAI Chat</div>
+          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Ask Anything</div>
+        </div>
+        <!-- Add more options sections here for other icons -->
+      </div>
+    </nav>
+  </div>
+  <!-- Main Content -->
+  <div class="flex-grow-1 d-flex flex-column" id="mainContent" style="background:#181a20; transition: margin-left 0.2s;">
+    <!-- Dashboard Workspace -->
+    <div class="flex-grow-1 p-4" id="dashboardWorkspace">
+      <h2 class="text-light mb-4">Welcome to Your Dashboard</h2>
+      <p class="text-secondary">This is your workspace. Here you will see your funding opportunities, application drafts, and more.</p>
+      <!-- Option buttons removed as requested -->
+    </div>
+    <!-- Lower Chat Bar -->
+    <!-- Floating Chat Box -->
+    <div id="chatBox" style="position: fixed; left: 50%; transform: translateX(-50%); bottom: 32px; z-index: 1050; display: none; width: 60vw; max-width: 900px; min-width: 320px;">
+      <form id="chatForm" autocomplete="off" style="background: #23272f; border-radius: 32px; box-shadow: 0 2px 16px #0008; padding: 8px 32px 8px 32px; display: flex; align-items: center; gap: 16px; width: 100%;">
+        <span style="color: #4f8cff; font-weight: 500; font-size: 1rem; margin-right: 8px;">Ask Anything</span>
+        <div style="flex:1; position:relative;">
+          <input type="text" class="form-control" id="chatInput" placeholder="Type your question..." style="background:#23272f; color:#f1f1f1; border:none; border-radius: 20px; padding-right: 36px;">
+          <button type="submit" style="position:absolute; top:50%; right:8px; transform:translateY(-50%); background:none; border:none; outline:none;">
+            <img src="https://img.icons8.com/ios/24/4f8cff/arrow--v1.png" alt="Send" style="width:24px; height:24px;">
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  // VSCode-style sidebar: icon-only bar is always visible, clicking an icon toggles sidebar and shows its options
+  var sidebar = document.getElementById('sidebar');
+  var sidebarOptions = document.getElementById('sidebarOptions');
+  var fundingSidebarIcon = document.getElementById('fundingSidebarIcon');
+  var activeSection = null;
+  function showSidebar(sectionId) {
+    sidebar.style.width = '220px';
+    sidebar.style.minWidth = '220px';
+    sidebar.style.padding = '';
+    sidebarOptions.style.display = 'block';
+    // Hide all options sections
+    document.querySelectorAll('#sidebarOptions > div').forEach(function(opt) {
+      opt.style.display = 'none';
+    });
+    // Show the selected section and set color
+    var section = document.getElementById(sectionId);
+    section.style.display = 'block';
+    activeSection = sectionId;
+  }
+  function hideSidebar() {
+    sidebar.style.width = '0';
+    sidebar.style.minWidth = '0';
+    sidebar.style.padding = '0';
+    sidebarOptions.style.display = 'none';
+    activeSection = null;
+  }
+  fundingSidebarIcon.onclick = function() {
+    if (activeSection === 'fundingOptions') {
+      hideSidebar();
+    } else {
+      showSidebar('fundingOptions');
+    }
+  };
+  folderSidebarIcon.onclick = function() {
+    if (activeSection === 'folderOptions') {
+      hideSidebar();
+    } else {
+      showSidebar('folderOptions');
+    }
+  };
+  userBannerSidebarIcon.onclick = function() {
+    if (activeSection === 'userBannerOptions') {
+      hideSidebar();
+    } else {
+      showSidebar('userBannerOptions');
+    }
+  };
+  // Fix: Single handler for OpenAI icon to toggle both chat and sidebar
+  var openAIIcon = document.getElementById('openAISidebarIcon');
+  var chatBox = document.getElementById('chatBox');
+  var chatVisible = false;
+  openAIIcon.onclick = function() {
+    chatVisible = !chatVisible;
+    chatBox.style.display = chatVisible ? 'block' : 'none';
+    if (activeSection === 'openAIOptions') {
+      hideSidebar();
+    } else {
+      showSidebar('openAIOptions');
+    }
+  };
+
+  // Placeholder for chat functionality
+  document.getElementById('chatForm').onsubmit = function(e) {
+    e.preventDefault();
+    const msg = document.getElementById('chatInput').value;
+    if(msg.trim()) {
+      alert('ChatGPT (mock): ' + msg);
+      document.getElementById('chatInput').value = '';
+    }
+  };
+</script>
+{% endblock %}
