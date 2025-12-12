@@ -53,6 +53,17 @@
   </div>
   <!-- Main Content -->
   <div class="flex-grow-1 d-flex flex-column" id="mainContent" style="background:#181a20; transition: margin-left 0.2s;">
+    <!-- Dashboard Title -->
+    <div class="px-4 pt-4">
+      <h2 id="dashboardTitle" class="fw-bold text-light mb-2" style="letter-spacing:0.5px;">
+        {% if user.first_name or user.last_name %}
+          {{ user.first_name }} {{ user.last_name }} Dashboard
+        {% else %}
+          {{ user.username }} Dashboard
+        {% endif %}
+      </h2>
+      <hr style="border: none; border-top: 2px solid #343a40; margin: 0 0 24px 0; width: 100%;">
+    </div>
     <!-- Dashboard Workspace -->
     <div class="flex-grow-1 d-flex flex-column" id="dashboardWorkspace" style="min-height:400px;">
       
