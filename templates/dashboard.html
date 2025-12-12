@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
+{% if show_api_banner %}
+<div class="alert alert-warning text-center mb-0" style="border-radius:0; background:#ffefc1; color:#7c4a00; font-weight:600; border-bottom:2px solid #f9a825;">
+  <span class="me-2">⚠️</span>
+  Please add your OpenAI API key or link your account to a developer subscription before continuing. The app will not work until this is configured.
+</div>
+{% endif %}
 <!-- Top bar with logo and label -->
 <div class="d-flex align-items-center justify-content-between px-4 py-2" style="background: #181a20; border-bottom: 1px solid #23272f;">
   <div class="d-flex align-items-center gap-3">
     <img src="{% static 'img/new logo.png' %}" alt="Funding Agent Logo" style="height: 32px; width: auto; object-fit: contain; filter: brightness(0.95) drop-shadow(0 0 4px #23272f);">
-    <span class="fs-4 fw-bold text-light">Funding Intelligence Agent</span>
+    <span class="fs-4 fw-bold text-light">research Funding assistant</span>
   </div>
   <!-- Top bar right section left empty as requested -->
 </div>
@@ -51,7 +57,7 @@
         <!-- OpenAI Subscription options -->
         <div id="openAISubscriptionOptions" style="color: #00a67e; display:none;">
           <div class="mb-2" style="font-weight: bold;">OpenAI Subscription</div>
-          <div class="mt-2" style="cursor:pointer; font-weight: normal;">Manage Subscription</div>
+          <div class="mt-2" id="manageSubscriptionBtn" style="cursor:pointer; font-weight: normal;">Manage Subscription</div>
           <div class="mt-2" style="cursor:pointer; font-weight: normal;">Credit Status</div>
         </div>
         <!-- Add more options sections here for other icons -->
@@ -61,8 +67,24 @@
   <!-- Main Content -->
   <div class="flex-grow-1 d-flex flex-column" id="mainContent" style="background:#181a20; transition: margin-left 0.2s;">
     <!-- Dashboard Workspace -->
-    <div class="flex-grow-1 d-flex justify-content-center align-items-center" id="dashboardWorkspace" style="min-height:400px;">
-      <!-- Content area intentionally left blank -->
+    <div class="flex-grow-1 d-flex flex-column" id="dashboardWorkspace" style="min-height:400px;">
+      <div id="openaiManageButtonsRow" style="display:none; background:#22242a; box-shadow:0 2px 12px #0005; padding: 18px 0 12px 0; justify-content:center; align-items:center; gap:32px; position:relative; z-index:2; width:100%; max-width:500px; margin:0 auto 18px auto;">
+        <div style="max-width:220px; width:100%; margin:0 12px;">
+          <button id="addApiKeyBtn" class="btn btn-outline-primary w-100">1. Add API Key</button>
+        </div>
+        <div style="max-width:220px; width:100%; margin:0 12px;">
+          <button id="addCreditsBtn" class="btn btn-outline-success w-100">2. Add Credits</button>
+        </div>
+      </div>
+      <div class="flex-grow-1 d-flex justify-content-center align-items-center" style="width:100%;">
+        <div id="openaiManagePanelDashboard" style="display:none; width:100%; max-width:400px; background:#22242a; border-radius:12px; box-shadow:0 2px 12px #0005; padding:32px 24px;">
+        <h5 class="mb-3" style="color:#00a67e; font-weight:bold;">Manage OpenAI Subscription</h5>
+        <div id="apiKeyInputPanel" style="display:none; margin-top:16px;">
+          <input type="password" class="form-control mb-2" id="openaiApiKeyInput" placeholder="Enter your OpenAI API key...">
+          <div class="text-info small mb-2">Your API key is encrypted and securely stored. We never share or expose your key to third parties.</div>
+          <button id="saveApiKeyBtn" class="btn btn-outline-primary w-100">Save API Key</button>
+        </div>
+      </div>
     </div>
     <!-- Lower Chat Bar -->
     <!-- Floating Chat Box -->
@@ -106,7 +128,11 @@
     sidebarOptions.style.display = 'none';
     activeSection = null;
   }
+  function iconsEnabled() {
+    return !document.querySelector('.alert-warning');
+  }
   fundingSidebarIcon.onclick = function() {
+    if (!iconsEnabled()) return;
     if (activeSection === 'fundingOptions') {
       hideSidebar();
     } else {
@@ -114,6 +140,7 @@
     }
   };
   folderSidebarIcon.onclick = function() {
+    if (!iconsEnabled()) return;
     if (activeSection === 'folderOptions') {
       hideSidebar();
     } else {
@@ -121,6 +148,7 @@
     }
   };
   userBannerSidebarIcon.onclick = function() {
+    if (!iconsEnabled()) return;
     if (activeSection === 'userBannerOptions') {
       hideSidebar();
     } else {
@@ -129,12 +157,69 @@
   };
   var openAISubscriptionIcon = document.getElementById('openAISubscriptionSidebarIcon');
   openAISubscriptionIcon.onclick = function() {
-    if (activeSection === 'openAISubscriptionOptions') {
-      hideSidebar();
-    } else {
-      showSidebar('openAISubscriptionOptions');
+    showSidebar('openAISubscriptionOptions');
+    setTimeout(attachOpenAIManageListeners, 10);
+    // Show the buttons row by default if banner is present
+    var openaiManageButtonsRow = document.getElementById('openaiManageButtonsRow');
+    var openaiManagePanelDashboard = document.getElementById('openaiManagePanelDashboard');
+    var apiKeyInputPanel = document.getElementById('apiKeyInputPanel');
+    if (document.querySelector('.alert-warning')) {
+      if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'flex';
+      if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
+      if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
     }
   };
+
+  function attachOpenAIManageListeners() {
+    var manageSubscriptionBtn = document.getElementById('manageSubscriptionBtn');
+    var openaiManagePanelDashboard = document.getElementById('openaiManagePanelDashboard');
+    var openaiManageButtonsRow = document.getElementById('openaiManageButtonsRow');
+    var addApiKeyBtn = document.getElementById('addApiKeyBtn');
+    var addCreditsBtn = document.getElementById('addCreditsBtn');
+    var apiKeyInputPanel = document.getElementById('apiKeyInputPanel');
+    if (manageSubscriptionBtn) {
+      manageSubscriptionBtn.onclick = function() {
+        // Show the buttons row below the top bar
+        if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'flex';
+        if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
+        if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
+      };
+    }
+    if (addApiKeyBtn) {
+      addApiKeyBtn.onclick = function() {
+        if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'block';
+        if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'block';
+      };
+    }
+    if (addCreditsBtn) {
+      addCreditsBtn.onclick = function() {
+        if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'block';
+        if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
+      };
+    }
+    // Hide the manage panel and buttons row if another sidebar section is opened
+    var sidebarIcons = document.querySelectorAll('.sidebar-icon');
+    sidebarIcons.forEach(function(icon) {
+      icon.addEventListener('click', function(e) {
+        if (icon.id !== 'openAISubscriptionSidebarIcon') {
+          if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
+          if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // If API banner is present, auto-open sidebar with OpenAI subscription options
+  if (document.querySelector('.alert-warning')) {
+    showSidebar('openAISubscriptionOptions');
+    setTimeout(attachOpenAIManageListeners, 10);
+    var openaiManageButtonsRow = document.getElementById('openaiManageButtonsRow');
+    var openaiManagePanelDashboard = document.getElementById('openaiManagePanelDashboard');
+    var apiKeyInputPanel = document.getElementById('apiKeyInputPanel');
+    if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'flex';
+    if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
+    if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
+  }
 
   // Placeholder for chat functionality
   document.getElementById('chatForm').onsubmit = function(e) {

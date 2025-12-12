@@ -42,7 +42,13 @@ def login_view(request):
             return render(request, 'login.html', {'error': 'Invalid email or password.'})
     return render(request, 'login.html')
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    show_api_banner = False
+    # Example logic: check for API key or developer subscription (customize as needed)
+    if request.user.is_authenticated:
+        # If you add a UserAPIKey model, check for it here
+        # For now, just set to True to always show banner
+        show_api_banner = True
+    return render(request, 'dashboard.html', {'show_api_banner': show_api_banner})
 def signup_intro(request):
     return render(request, 'signup_intro.html')
 
