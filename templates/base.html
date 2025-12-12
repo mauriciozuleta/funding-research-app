@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +34,10 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold" href="/">Funding Intelligence Agent</a>
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="/">
+      <img src="{% static 'img/new logo.png' %}" alt="Funding Agent Logo" style="height: 32px; width: auto; object-fit: contain; filter: brightness(0.95) drop-shadow(0 0 4px #23272f);">
+      Research Funding Assistant
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

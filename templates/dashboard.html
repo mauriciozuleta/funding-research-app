@@ -1,20 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-{% if show_api_banner %}
-<div class="alert alert-warning text-center mb-0" style="border-radius:0; background:#ffefc1; color:#7c4a00; font-weight:600; border-bottom:2px solid #f9a825;">
-  <span class="me-2">⚠️</span>
-  Please add your OpenAI API key or link your account to a developer subscription before continuing. The app will not work until this is configured.
-</div>
-{% endif %}
-<!-- Top bar with logo and label -->
-<div class="d-flex align-items-center justify-content-between px-4 py-2" style="background: #181a20; border-bottom: 1px solid #23272f;">
-  <div class="d-flex align-items-center gap-3">
-    <img src="{% static 'img/new logo.png' %}" alt="Funding Agent Logo" style="height: 32px; width: auto; object-fit: contain; filter: brightness(0.95) drop-shadow(0 0 4px #23272f);">
-    <span class="fs-4 fw-bold text-light">research Funding assistant</span>
-  </div>
-  <!-- Top bar right section left empty as requested -->
-</div>
+
 <div class="d-flex" style="height: calc(90vh - 56px);">
   <!-- VSCode-style Sidebar -->
   <div id="sidebarContainer" class="d-flex" style="height: 100%;">
@@ -68,225 +55,36 @@
   <div class="flex-grow-1 d-flex flex-column" id="mainContent" style="background:#181a20; transition: margin-left 0.2s;">
     <!-- Dashboard Workspace -->
     <div class="flex-grow-1 d-flex flex-column" id="dashboardWorkspace" style="min-height:400px;">
-      <div id="openaiManageButtonsRow" style="display:none; background:#22242a; box-shadow:0 2px 12px #0005; padding: 18px 0 12px 0; justify-content:center; align-items:center; gap:32px; position:relative; z-index:2; width:100%; max-width:500px; margin:0 auto 18px auto;">
-        <div style="display: flex; width: 100%; gap: 0; align-items: flex-start;">
-          <div style="flex: 1; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 16px; padding-right: 32px;">
-            <button id="addApiKeyBtn" class="btn btn-outline-primary">1. Add API Key</button>
-            <button id="manageApiKeyBtn" class="btn btn-outline-secondary">Manage API Key</button>
-          </div>
-          <div style="width: 1px; background: #bbb; height: 48px; align-self: center;"></div>
-          <div style="flex: 1; display: flex; flex-direction: row; justify-content: flex-start; align-items: center; padding-left: 32px;">
-            <button id="addCreditsBtn" class="btn btn-outline-success">2. Add Credits</button>
-          </div>
-        </div>
-      </div>
-      <div class="flex-grow-1 d-flex justify-content-center align-items-center" style="width:100%;">
-        <div id="openaiManagePanelDashboard" style="display:none; width:100%; max-width:400px; background:#22242a; border-radius:12px; box-shadow:0 2px 12px #0005; padding:32px 24px;">
-        <h5 class="mb-3" style="color:#00a67e; font-weight:bold;">Manage OpenAI Subscription</h5>
-        <div id="apiKeyInputPanel" style="display:none; margin-top:16px;">
-          <input type="password" class="form-control mb-2" id="openaiApiKeyInput" placeholder="Enter your OpenAI API key...">
-          <div class="text-info small mb-2">Your API key is encrypted and securely stored. We never share or expose your key to third parties.</div>
-          <button id="saveApiKeyBtn" class="btn btn-outline-primary w-100">Save API Key</button>
-          <div id="apiKeySaveMsg" class="mt-2"></div>
-        </div>
-      </div>
-    </div>
-    <!-- Lower Chat Bar -->
-    <!-- Floating Chat Box -->
-    <div id="chatBox" style="position: fixed; left: 50%; transform: translateX(-50%); bottom: 32px; z-index: 1050; display: none; width: 60vw; max-width: 900px; min-width: 320px;">
-      <form id="chatForm" autocomplete="off" style="background: #23272f; border-radius: 32px; box-shadow: 0 2px 16px #0008; padding: 8px 32px 8px 32px; display: flex; align-items: center; gap: 16px; width: 100%;">
-        <span style="color: #4f8cff; font-weight: 500; font-size: 1rem; margin-right: 8px;">Ask Anything</span>
-        <div style="flex:1; position:relative;">
-          <input type="text" class="form-control" id="chatInput" placeholder="Type your question..." style="background:#23272f; color:#f1f1f1; border:none; border-radius: 20px; padding-right: 36px;">
-          <button type="submit" style="position:absolute; top:50%; right:8px; transform:translateY(-50%); background:none; border:none; outline:none;">
-            <img src="https://img.icons8.com/ios/24/4f8cff/arrow--v1.png" alt="Send" style="width:24px; height:24px;">
-          </button>
-        </div>
-      </form>
+      
     </div>
   </div>
 </div>
+
+
+<!-- Minimal Amelia Chatbox (Outlined, single row, paper plane icon) -->
+<div id="ameliaChatbox" style="position: sticky; bottom: 0; left: 0; right: 0; margin: 0 auto; z-index: 1050; width: 100%; max-width: 520px; min-width: 260px; border: 2px solid #8e44ad; border-radius: 32px; background: transparent; box-shadow: none; padding: 0; display: flex; align-items: center; justify-content: center; height: 56px;">
+  <form id="ameliaChatForm" autocomplete="off" style="display: flex; align-items: center; gap: 8px; width: 100%; padding: 0 12px;">
+    <img src="https://img.icons8.com/ios/32/8e44ad/robot-2--v2.png" alt="Amelia" style="width:28px; height:28px; margin-right:6px; background:transparent;">
+    <input type="text" class="form-control" id="ameliaChatInput" placeholder="Message Amelia..." style="background: transparent; color: #b0aecd; border: none; border-bottom: 1.5px solid #8e44ad; border-radius: 0; padding: 0 8px; height: 36px; font-size: 1rem; box-shadow: none; outline: none;">
+    <button type="submit" style="background: transparent; border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <img src="https://img.icons8.com/ios/28/8e44ad/paper-plane--v1.png" alt="Send" style="width:24px; height:24px; filter: none;">
+    </button>
+  </form>
+</div>
 <script>
-  // VSCode-style sidebar: icon-only bar is always visible, clicking an icon toggles sidebar and shows its options
-  var sidebar = document.getElementById('sidebar');
-  var sidebarOptions = document.getElementById('sidebarOptions');
-  var fundingSidebarIcon = document.getElementById('fundingSidebarIcon');
-  var activeSection = null;
-  function showSidebar(sectionId) {
-    sidebar.style.width = '220px';
-    sidebar.style.minWidth = '220px';
-    sidebar.style.padding = '';
-    sidebarOptions.style.display = 'block';
-    // Hide all options sections
-    document.querySelectorAll('#sidebarOptions > div').forEach(function(opt) {
-      opt.style.display = 'none';
-    });
-    // Show the selected section and set color
-    var section = document.getElementById(sectionId);
-    section.style.display = 'block';
-    activeSection = sectionId;
-  }
-  function hideSidebar() {
-    sidebar.style.width = '0';
-    sidebar.style.minWidth = '0';
-    sidebar.style.padding = '0';
-    sidebarOptions.style.display = 'none';
-    activeSection = null;
-  }
-  function iconsEnabled() {
-    return !document.querySelector('.alert-warning');
-  }
-  fundingSidebarIcon.onclick = function() {
-    if (!iconsEnabled()) return;
-    if (activeSection === 'fundingOptions') {
-      hideSidebar();
-    } else {
-      showSidebar('fundingOptions');
-    }
-  };
-  folderSidebarIcon.onclick = function() {
-    if (!iconsEnabled()) return;
-    if (activeSection === 'folderOptions') {
-      hideSidebar();
-    } else {
-      showSidebar('folderOptions');
-    }
-  };
-  userBannerSidebarIcon.onclick = function() {
-    if (!iconsEnabled()) return;
-    if (activeSection === 'userBannerOptions') {
-      hideSidebar();
-    } else {
-      showSidebar('userBannerOptions');
-    }
-  };
-  var openAISubscriptionIcon = document.getElementById('openAISubscriptionSidebarIcon');
-  openAISubscriptionIcon.onclick = function() {
-    showSidebar('openAISubscriptionOptions');
-    setTimeout(attachOpenAIManageListeners, 10);
-    // Show the buttons row by default if banner is present
-    var openaiManageButtonsRow = document.getElementById('openaiManageButtonsRow');
-    var openaiManagePanelDashboard = document.getElementById('openaiManagePanelDashboard');
-    var apiKeyInputPanel = document.getElementById('apiKeyInputPanel');
-    if (document.querySelector('.alert-warning')) {
-      if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'flex';
-      if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
-      if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
-    }
-  };
-
-  function attachOpenAIManageListeners() {
-        // AJAX save for API key
-        var saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
-        var openaiApiKeyInput = document.getElementById('openaiApiKeyInput');
-        var apiKeySaveMsg = document.getElementById('apiKeySaveMsg');
-        function getCookie(name) {
-          let cookieValue = null;
-          if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-              const cookie = cookies[i].trim();
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-              }
-            }
-          }
-          return cookieValue;
-        }
-        if (saveApiKeyBtn && openaiApiKeyInput) {
-          saveApiKeyBtn.onclick = function(e) {
-            e.preventDefault();
-            apiKeySaveMsg.innerHTML = '';
-            const apiKey = openaiApiKeyInput.value;
-            if (!apiKey) {
-              apiKeySaveMsg.innerHTML = '<span class="text-danger">Please enter your API key.</span>';
-              return;
-            }
-            // Simulate network request and always show success
-            setTimeout(function() {
-              apiKeySaveMsg.innerHTML = '<span class="text-success">API key saved successfully!<br>Your API key is encrypted and securely stored. Only you can access or update it.</span>' +
-                '<div class="d-grid mt-3"><button id="continueAfterApiKeyBtn" class="btn btn-success">Continue</button></div>';
-              openaiApiKeyInput.value = '';
-              var continueBtn = document.getElementById('continueAfterApiKeyBtn');
-              if (continueBtn) {
-                continueBtn.onclick = function() {
-                  // Enable all sidebar icons
-                  document.querySelectorAll('.sidebar-icon').forEach(function(icon) {
-                    icon.classList.remove('disabled');
-                    icon.style.pointerEvents = '';
-                    icon.style.opacity = '';
-                  });
-                  // Remove the API banner if present
-                  var banner = document.querySelector('.alert-warning');
-                  if (banner) banner.style.display = 'none';
-                  // Hide the manage panel
-                  var openaiManagePanelDashboard = document.getElementById('openaiManagePanelDashboard');
-                  if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
-                  apiKeySaveMsg.innerHTML = '';
-                };
-              }
-            }, 500);
-          };
-        }
-    var manageSubscriptionBtn = document.getElementById('manageSubscriptionBtn');
-    var openaiManagePanelDashboard = document.getElementById('openaiManagePanelDashboard');
-    var openaiManageButtonsRow = document.getElementById('openaiManageButtonsRow');
-    var addApiKeyBtn = document.getElementById('addApiKeyBtn');
-    var addCreditsBtn = document.getElementById('addCreditsBtn');
-    var apiKeyInputPanel = document.getElementById('apiKeyInputPanel');
-    if (manageSubscriptionBtn) {
-      manageSubscriptionBtn.onclick = function() {
-        // Show the buttons row below the top bar
-        if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'flex';
-        if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
-        if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
-      };
-    }
-    if (addApiKeyBtn) {
-      addApiKeyBtn.onclick = function() {
-        if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'block';
-        if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'block';
-      };
-    }
-    if (addCreditsBtn) {
-      addCreditsBtn.onclick = function() {
-        if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'block';
-        if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
-      };
-    }
-    // Hide the manage panel and buttons row if another sidebar section is opened
-    var sidebarIcons = document.querySelectorAll('.sidebar-icon');
-    sidebarIcons.forEach(function(icon) {
-      icon.addEventListener('click', function(e) {
-        if (icon.id !== 'openAISubscriptionSidebarIcon') {
-          if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
-          if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'none';
-        }
-      });
-    });
-  }
-
-  // If API banner is present, auto-open sidebar with OpenAI subscription options
-  if (document.querySelector('.alert-warning')) {
-    showSidebar('openAISubscriptionOptions');
-    setTimeout(attachOpenAIManageListeners, 10);
-    var openaiManageButtonsRow = document.getElementById('openaiManageButtonsRow');
-    var openaiManagePanelDashboard = document.getElementById('openaiManagePanelDashboard');
-    var apiKeyInputPanel = document.getElementById('apiKeyInputPanel');
-    if (openaiManageButtonsRow) openaiManageButtonsRow.style.display = 'flex';
-    if (openaiManagePanelDashboard) openaiManagePanelDashboard.style.display = 'none';
-    if (apiKeyInputPanel) apiKeyInputPanel.style.display = 'none';
-  }
-
-  // Placeholder for chat functionality
-  document.getElementById('chatForm').onsubmit = function(e) {
+// Minimal Amelia chatbox mockup
+const ameliaForm = document.getElementById('ameliaChatForm');
+const ameliaInput = document.getElementById('ameliaChatInput');
+if (ameliaForm) {
+  ameliaForm.onsubmit = function(e) {
     e.preventDefault();
-    const msg = document.getElementById('chatInput').value;
+    const msg = ameliaInput.value;
     if(msg.trim()) {
-      alert('ChatGPT (mock): ' + msg);
-      document.getElementById('chatInput').value = '';
+      alert('Amelia: ' + msg);
+      ameliaInput.value = '';
     }
   };
+}
 </script>
+
 {% endblock %}
