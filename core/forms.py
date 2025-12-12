@@ -1,3 +1,21 @@
+from .models import UserAPIKey
+from django import forms
+
+class UserAPIKeyForm(forms.ModelForm):
+    api_key = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Enter your OpenAI API key...', 'class': 'form-control'}))
+
+    class Meta:
+        model = UserAPIKey
+        fields = []  # Don't use model fields directly
+
+    def save(self, commit=True, user=None):
+        instance = super().save(commit=False)
+        instance.api_key = self.cleaned_data['api_key']
+        if user:
+            instance.user = user
+        if commit:
+            instance.save()
+        return instance
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError

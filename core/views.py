@@ -1,3 +1,24 @@
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from .models import UserAPIKey
+from .forms import UserAPIKeyForm
+from django.views.decorators.csrf import csrf_exempt
+# Secure API key save endpoint
+@require_POST
+@csrf_exempt  # If you use AJAX, you may need to adjust CSRF handling
+def save_openai_api_key(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'error': 'Authentication required.'}, status=403)
+    try:
+        obj = UserAPIKey.objects.get(user=request.user)
+        form = UserAPIKeyForm(request.POST, instance=obj)
+    except UserAPIKey.DoesNotExist:
+        form = UserAPIKeyForm(request.POST)
+    if form.is_valid():
+        form.save(user=request.user)
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'errors': form.errors}, status=400)
 from django.contrib.auth import logout
 
 # ...existing code...
